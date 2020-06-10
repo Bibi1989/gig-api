@@ -1,0 +1,376 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Find Gigs",
+    "description": "An Application to find gigs around the nation by search with their stack",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:5005",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Find gigs",
+      "description": "An Application to find gigs around the nation by search with their stack"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/gigs": {
+      "post": {
+        "tags": ["Gigs"],
+        "description": "Add user gig",
+        "parameters": [
+          {
+            "name": "first_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "last_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "profile_image",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "github_url",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "linkedin_url",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "technologies",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "proficiency",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "stack",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "profile",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "experience",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "yoe",
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "adminId",
+            "in": "path",
+            "type": "integer"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New book is created",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Gigs"],
+        "summary": "Get all gigs in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AllGigs"
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/{gigId}": {
+      "tags": ["Gig"],
+      "parameters": [
+        {
+          "name": "gigId",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Gig"],
+        "summary": "Get gig with given ID",
+        "responses": {
+          "200": {
+            "description": "Gig is found",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete gig with given ID",
+        "tags": ["Gig"],
+        "responses": {
+          "200": {
+            "description": "Gig is deleted",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update gig with give ID",
+        "tags": ["Gig"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book is updated",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      }
+    },
+    "/api/admin": {
+      "tags": ["Admin"],
+      "post": {
+        "tags": ["Admin"],
+        "description": "Add user Admin",
+        "parameters": [
+          {
+            "name": "first_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "last_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New Admin is created",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Gigs": {
+      "required": [
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        "technologies",
+        "password"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profile_image": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "stack": {
+          "type": "string"
+        },
+        "github_url": {
+          "type": "string"
+        },
+        "linkedin_url": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "technologies": {
+          "type": "string"
+        },
+        "proficiency": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "experience": {
+          "type": "string"
+        },
+        "yoe": {
+          "type": "string"
+        },
+        "adminId": {
+          "type": "integer"
+        }
+      }
+    },
+    "AllGigs": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profile_image": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "stack": {
+          "type": "string"
+        },
+        "github_url": {
+          "type": "string"
+        },
+        "linkedin_url": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "technologies": {
+          "type": "string"
+        },
+        "proficiency": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "experience": {
+          "type": "string"
+        },
+        "yoe": {
+          "type": "string"
+        }
+      }
+    },
+    "Admin": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

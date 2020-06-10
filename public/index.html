@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      nav {
+        height: 7vh;
+        background-color: teal;
+        padding: 0 10%;
+        line-height: 7vh;
+      }
+
+      nav h1 {
+        color: white;
+      }
+      .endpoint {
+        text-align: center;
+        padding-top: 5%;
+      }
+      a {
+        display: block;
+        text-decoration: none;
+        text-align: center;
+        color: white;
+        margin: 1em auto;
+        padding: 1em;
+        background-color: dodgerblue;
+      }
+    </style>
+  </head>
+  <body>
+    <nav><h1>Endpoints</h1></nav>
+    <div class="container">
+      <h1 class="endpoint">Wrong enpoint</h1>
+      <a href="/swagger">Go To Swagger Documentation</a>
+    </div>
+  </body>
+</html>
