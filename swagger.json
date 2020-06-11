@@ -136,6 +136,77 @@
         }
       }
     },
+    "/api/v1/gig?page={page}&limit={limit}": {
+      "tags": ["Paginated Api"],
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "type": "string"
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Paginate api"],
+        "summary": "Paginate api",
+        "responses": {
+          "200": {
+            "description": "Gig is found",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gig/search?location={location}": {
+      "tags": ["Query By Location"],
+      "parameters": [
+        {
+          "name": "location",
+          "in": "query",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Query"],
+        "summary": "Query by location",
+        "responses": {
+          "200": {
+            "description": "Gig is found",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gig/search?proficiency={proficiency}": {
+      "tags": ["Query By Proficiency"],
+      "parameters": [
+        {
+          "name": "proficiency",
+          "in": "query",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Query"],
+        "summary": "Query by Proficiency",
+        "responses": {
+          "200": {
+            "description": "Gig is found",
+            "schema": {
+              "$ref": "#/definitions/Gigs"
+            }
+          }
+        }
+      }
+    },
     "/api/v1/gig/{gigId}": {
       "tags": ["Gig"],
       "parameters": [

@@ -1,5 +1,5 @@
 import { capitalizeString } from "../utils/capitalize";
-import { EInterface, GInterface } from "../utils/interfaces";
+import { GInterface } from "../utils/interfaces";
 import { validate } from "../utils/validates";
 const { Op } = require("sequelize");
 
@@ -30,7 +30,7 @@ export const getAllGigs = async (query: {
       offset: offset,
     });
     const new_gig = await Gig.findAll();
-    return { status: "success", count: new_gig.length, page: page, data: gigs };
+    return { status: "success", count: new_gig.length, page, data: gigs };
   } catch (error) {
     return { status: "error", error: error.message };
   }
@@ -47,11 +47,11 @@ export const getGig = async (id: number) => {
 };
 
 export const queryGigBaseOnLocation = async (location: string) => {
-  const text = capitalizeString(location);
-  console.log(text);
   try {
+    const text = capitalizeString(location);
+    if (!text) return { status: "error", error: "Gig not found!!!" };
     const gig = await Gig.findAll({ where: { location } });
-    if (!gig) return { status: "error", error: "Gig not found!!!" };
+    if (!gig || gig.length <= 0) return { status: "error", data: [] };
     return { status: "success", data: gig };
   } catch (error) {
     return { status: "error", error: error.message };

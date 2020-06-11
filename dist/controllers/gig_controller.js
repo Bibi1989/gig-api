@@ -30,7 +30,7 @@ exports.getAllGigs = (query) => __awaiter(void 0, void 0, void 0, function* () {
             offset: offset,
         });
         const new_gig = yield Gig.findAll();
-        return { status: "success", count: new_gig.length, page: page, data: gigs };
+        return { status: "success", count: new_gig.length, page, data: gigs };
     }
     catch (error) {
         return { status: "error", error: error.message };
@@ -48,12 +48,13 @@ exports.getGig = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.queryGigBaseOnLocation = (location) => __awaiter(void 0, void 0, void 0, function* () {
-    const text = capitalize_1.capitalizeString(location);
-    console.log(text);
     try {
-        const gig = yield Gig.findAll({ where: { location } });
-        if (!gig)
+        const text = capitalize_1.capitalizeString(location);
+        if (!text)
             return { status: "error", error: "Gig not found!!!" };
+        const gig = yield Gig.findAll({ where: { location } });
+        if (!gig || gig.length <= 0)
+            return { status: "error", data: [] };
         return { status: "success", data: gig };
     }
     catch (error) {

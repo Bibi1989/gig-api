@@ -16,7 +16,7 @@ const router = Router();
 
 router.route("/").get(async (req, res) => {
   let limit = req.query.limit ? Number(req.query.limit) : 10;
-  let page = req.query.page ? Number(req.query.page) : 0;
+  let page = req.query.page ? Number(req.query.page) : 1;
 
   let offset = limit * (page - 1);
 
