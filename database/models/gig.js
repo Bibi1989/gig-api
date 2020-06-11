@@ -23,9 +23,6 @@ module.exports = (sequelize, DataTypes) => {
   );
   Gig.associate = function (models) {
     // associations can be defined here
-    Gig.belongsTo(models.Admin, {
-      foreignKey: "adminId",
-    });
   };
   return Gig;
 };

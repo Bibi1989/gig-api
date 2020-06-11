@@ -59,9 +59,6 @@ module.exports = {
       yoe: {
         type: Sequelize.STRING,
       },
-      adminId: {
-        type: Sequelize.INTEGER,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

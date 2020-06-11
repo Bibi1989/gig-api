@@ -10,7 +10,7 @@
     }
   },
   "host": "localhost:5005",
-  "basePath": "/api",
+  "basePath": "/",
   "tags": [
     {
       "name": "Find gigs",
@@ -21,7 +21,7 @@
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "/api/gigs": {
+    "/api/v1/gig": {
       "post": {
         "tags": ["Gigs"],
         "description": "Add user gig",
@@ -105,19 +105,20 @@
             "name": "yoe",
             "in": "path",
             "type": "string"
-          },
-          {
-            "name": "adminId",
-            "in": "path",
-            "type": "integer"
           }
         ],
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "New book is created",
+            "description": "New gig is created",
             "schema": {
               "$ref": "#/definitions/Gigs"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -135,7 +136,7 @@
         }
       }
     },
-    "/api/gigs/{gigId}": {
+    "/api/v1/gig/{gigId}": {
       "tags": ["Gig"],
       "parameters": [
         {
@@ -293,9 +294,6 @@
         },
         "yoe": {
           "type": "string"
-        },
-        "adminId": {
-          "type": "integer"
         }
       }
     },
@@ -368,6 +366,28 @@
           "type": "string"
         },
         "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "stack": {
+          "type": "string"
+        },
+        "technologies": {
           "type": "string"
         }
       }
