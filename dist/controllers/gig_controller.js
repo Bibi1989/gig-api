@@ -88,7 +88,6 @@ exports.queryGigBaseOnTechnology = (tech) => __awaiter(void 0, void 0, void 0, f
 exports.baseOnLocationProficiencyTech = (tech) => __awaiter(void 0, void 0, void 0, function* () {
     const techObj = Object.assign(Object.assign({}, tech), { technology: tech.technology === undefined ? "" : tech.technology });
     const { location, proficiency, technology } = techObj;
-    console.log(techObj);
     try {
         const gig = yield Gig.findAll({
             where: {

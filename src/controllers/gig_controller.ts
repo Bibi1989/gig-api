@@ -86,7 +86,6 @@ export const baseOnLocationProficiencyTech = async (tech: any) => {
     technology: tech.technology === undefined ? "" : tech.technology,
   };
   const { location, proficiency, technology } = techObj;
-  console.log(techObj);
   try {
     const gig = await Gig.findAll({
       where: {
