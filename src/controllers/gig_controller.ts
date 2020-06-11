@@ -139,20 +139,3 @@ export const deleteGig = async (id: number) => {
     return { status: "error", error: error.message };
   }
 };
-
-// const {
-//   first_name,
-//   last_name,
-//   email,
-//   phone,
-//   password,
-//   stack,
-//   github_url,
-//   linkedin_url,
-//   technologies,
-//   proficiency,
-//   location,
-//   profile,
-//   experience,
-//   yoe,
-// } = gig;
