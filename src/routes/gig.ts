@@ -81,8 +81,9 @@ router.route("/query").get(async (req, res) => {
   res.json(gig);
 });
 
-router.route("/:id").get(async (req, res) => {
-  const gig = await getGig(Number(req.params.id));
+router.route("/profile").get(authenticate, async (req: any, res) => {
+  const { id } = req.user;
+  const gig = await getGig(Number(id));
   if (gig.error) {
     res.status(404).json({ error: gig.error });
     return;

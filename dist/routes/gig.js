@@ -76,8 +76,9 @@ router.route("/query").get((req, res) => __awaiter(void 0, void 0, void 0, funct
     }
     res.json(gig);
 }));
-router.route("/:id").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const gig = yield gig_controller_1.getGig(Number(req.params.id));
+router.route("/profile").get(auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.user;
+    const gig = yield gig_controller_1.getGig(Number(id));
     if (gig.error) {
         res.status(404).json({ error: gig.error });
         return;

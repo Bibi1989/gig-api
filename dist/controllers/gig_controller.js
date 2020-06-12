@@ -38,7 +38,7 @@ exports.getAllGigs = (query) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getGig = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const gig = yield Gig.findOne({ where: { id } });
+        const gig = yield Gig.findOne({ where: { user: id } });
         if (!gig)
             return { status: "error", error: "Gig not found!!!" };
         return { status: "success", data: gig };
