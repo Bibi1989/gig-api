@@ -7,7 +7,6 @@ export interface GInterface {
   stack: string;
   github_url?: string;
   linkedin_url?: string;
-  password: string;
   technologies: string;
   proficiency?: string;
   location?: string;
@@ -22,7 +21,6 @@ export interface EInterface {
   email: string;
   phone: string;
   stack: string;
-  password: string;
   technologies: string;
 }
 

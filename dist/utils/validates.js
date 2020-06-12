@@ -11,18 +11,15 @@ exports.validate = (body) => {
         email: "",
         phone: "",
         stack: "",
-        password: "",
         technologies: "",
     };
-    const { first_name, last_name, email, phone, stack, password, technologies, } = body;
+    const { first_name, last_name, email, phone, stack, technologies } = body;
     if (!first_name)
         errors.first_name = "First name is empty";
     if (!last_name)
         errors.last_name = "Last name is empty";
     if (!email)
         errors.email = "Email is empty";
-    if (!password)
-        errors.password = "Password is empty";
     if (!technologies)
         errors.technologies = "Technologies is empty";
     if (!phone)
@@ -34,8 +31,7 @@ exports.validate = (body) => {
         errors.email ||
         errors.phone ||
         errors.stack ||
-        errors.technologies ||
-        errors.password) {
+        errors.technologies) {
         data.errors = errors;
     }
     else {
