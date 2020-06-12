@@ -13,17 +13,19 @@ interface userInterface {
 }
 
 export const createUsers = async (user: userInterface) => {
-  const data: any = validateUser(user);
-
-  if (data.errors) return { status: "error", error: data.errors };
-
-  const findUser = await User.findOne({
-    where: {
-      email: user.email,
-    },
-  });
   //   console.log();
   try {
+    const { first_name, last_name, email, password } = user;
+    if (!first_name) return { status: "error", error: "User field is empty" };
+    if (!last_name) return { status: "error", error: "User field is empty" };
+    if (!email) return { status: "error", error: "Email field is empty" };
+    if (!password) return { status: "error", error: "Password field is empty" };
+
+    const findUser = await User.findOne({
+      where: {
+        email: user.email,
+      },
+    });
     if (findUser) {
       return { status: "error", error: "User with this email exist" };
     }

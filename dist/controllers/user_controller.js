@@ -15,20 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const bcrypt_1 = require("bcrypt");
-const validates_1 = require("../utils/validates");
 const models = require("../../database/models/");
 const { User, Gig } = models;
 exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = validates_1.validateUser(user);
-    if (data.errors)
-        return { status: "error", error: data.errors };
-    const findUser = yield User.findOne({
-        where: {
-            email: user.email,
-        },
-    });
     //   console.log();
     try {
+        const { first_name, last_name, email, password } = user;
+        if (!first_name)
+            return { status: "error", error: "User field is empty" };
+        if (!last_name)
+            return { status: "error", error: "User field is empty" };
+        if (!email)
+            return { status: "error", error: "Email field is empty" };
+        if (!password)
+            return { status: "error", error: "Password field is empty" };
+        const findUser = yield User.findOne({
+            where: {
+                email: user.email,
+            },
+        });
         if (findUser) {
             return { status: "error", error: "User with this email exist" };
         }
