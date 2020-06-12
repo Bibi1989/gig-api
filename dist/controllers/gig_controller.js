@@ -15,12 +15,23 @@ const { Op } = require("sequelize");
 const models = require("../../database/models/");
 const { Gig } = models;
 exports.createGig = (gig, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = validates_1.validate(gig);
-    if (data.errors) {
-        return { status: "error", error: data.errors };
+    try {
+        const data = validates_1.validate(gig);
+        if (data.errors) {
+            return { status: "error", error: data.errors };
+        }
+        const find_gig = yield Gig.findOne({ where: { id } });
+        if (find_gig)
+            return {
+                status: "error",
+                error: "You can't add another edit your profile",
+            };
+        const gigDetail = yield Gig.create(Object.assign(Object.assign({}, gig), { user: id }));
+        return { status: "success", data: gigDetail };
     }
-    const gigDetail = yield Gig.create(Object.assign(Object.assign({}, gig), { user: id }));
-    return { status: "success", data: gigDetail };
+    catch (error) {
+        return { status: "error", error: error.message };
+    }
 });
 exports.getAllGigs = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const { offset, limit, page } = query;

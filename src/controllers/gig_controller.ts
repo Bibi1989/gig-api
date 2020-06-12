@@ -8,14 +8,26 @@ const models = require("../../database/models/");
 const { Gig } = models;
 
 export const createGig = async (gig: GInterface, id: number) => {
-  const data = validate(gig);
-  if (data.errors) {
-    return { status: "error", error: data.errors };
+  try {
+    const data = validate(gig);
+    if (data.errors) {
+      return { status: "error", error: data.errors };
+    }
+
+    const find_gig = await Gig.findOne({ where: { id } });
+
+    if (find_gig)
+      return {
+        status: "error",
+        error: "You can't add another edit your profile",
+      };
+
+    const gigDetail = await Gig.create({ ...gig, user: id });
+
+    return { status: "success", data: gigDetail };
+  } catch (error) {
+    return { status: "error", error: error.message };
   }
-
-  const gigDetail = await Gig.create({ ...gig, user: id });
-
-  return { status: "success", data: gigDetail };
 };
 
 export const getAllGigs = async (query: {
