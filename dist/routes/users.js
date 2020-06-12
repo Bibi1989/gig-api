@@ -15,18 +15,24 @@ const router = express_1.Router();
 router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
     const user = yield user_controller_1.createUsers(body);
+    if (user.status === "error") {
+        res.status(400).json(user);
+    }
     res.header("auth", user.token);
-    res.json({ data: user });
+    res.json(user);
 }));
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
     const user = yield user_controller_1.loginUser(body);
+    if (user.status === "error") {
+        res.status(400).json(user);
+    }
     res.header("auth", user.token);
-    res.json({ data: user });
+    res.json(user);
 }));
 router.get("/users", (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_controller_1.getUsers();
-    res.json({ data: users });
+    res.json(users);
 }));
 exports.default = router;
 //# sourceMappingURL=users.js.map

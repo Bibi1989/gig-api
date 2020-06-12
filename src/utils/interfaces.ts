@@ -25,3 +25,16 @@ export interface EInterface {
   password: string;
   technologies: string;
 }
+
+export interface userInterface {
+  first_name?: string;
+  last_name?: string;
+  email: string;
+  password: string;
+}
+export interface UserErrorInterface {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+}

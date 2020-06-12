@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const auth_1 = __importDefault(require("./auth"));
 const gig_controller_1 = require("../controllers/gig_controller");
 const router = express_1.Router();
 router.route("/").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,15 +84,17 @@ router.route("/:id").get((req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     res.json(gig);
 }));
-router.route("/").post((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const gig = yield gig_controller_1.createGig(req.body);
+router.post("/", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.user;
+    console.log({ id });
+    const gig = yield gig_controller_1.createGig(req.body, Number(id));
     if (gig.error) {
         res.status(404).json({ error: gig.error });
         return;
     }
     res.json(gig);
 }));
-router.route("/:updateId").patch((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/:updateId").patch(auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { updateId } = req.params;
     const gig = yield gig_controller_1.updateGig(Number(updateId), req.body);
     if (gig.error) {
@@ -97,7 +103,7 @@ router.route("/:updateId").patch((req, res) => __awaiter(void 0, void 0, void 0,
     }
     res.json(gig);
 }));
-router.route("/:deleteId").delete((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/:deleteId").delete(auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { deleteId } = req.params;
     const gig = yield gig_controller_1.deleteGig(Number(deleteId));
     if (gig.error) {

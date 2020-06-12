@@ -43,4 +43,35 @@ exports.validate = (body) => {
     }
     return data;
 };
+exports.validateUser = (body) => {
+    const data = {
+        errors: null,
+        body: null,
+    };
+    const errors = {
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+    };
+    const { first_name, last_name, email, password } = body;
+    if (!first_name)
+        return { status: "error", error: "User field is empty" };
+    if (!last_name)
+        return { status: "error", error: "User field is empty" };
+    if (!email)
+        return { status: "error", error: "Email field is empty" };
+    if (!password)
+        return { status: "error", error: "Password field is empty" };
+    if (errors.first_name ||
+        errors.last_name ||
+        errors.email ||
+        errors.password) {
+        data.errors = errors;
+    }
+    else {
+        data.body = body;
+    }
+    return data;
+};
 //# sourceMappingURL=validates.js.map

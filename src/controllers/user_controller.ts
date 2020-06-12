@@ -1,20 +1,21 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { genSalt } from "bcrypt";
+import { validateUser } from "../utils/validates";
 const models = require("../../database/models/");
-const { User, Url } = models;
+const { User, Gig } = models;
 
 interface userInterface {
-  username: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
 }
 
 export const createUsers = async (user: userInterface) => {
-  if (!user.username) return { status: "error", error: "User field is empty" };
-  if (!user.email) return { status: "error", error: "Email field is empty" };
-  if (!user.password)
-    return { status: "error", error: "Password field is empty" };
+  const data: any = validateUser(user);
+
+  if (data.errors) return { status: "error", error: data.errors };
 
   const findUser = await User.findOne({
     where: {
@@ -55,7 +56,7 @@ export const loginUser = async (body: { email: string; password: string }) => {
 
     let user = await User.findOne({ where: { email } });
 
-    if (!user.dataValues.email)
+    if (!user)
       return { status: "error", error: `User with ${email} does not exist` };
 
     const validPassword = await bcrypt.compare(
@@ -83,7 +84,7 @@ export const loginUser = async (body: { email: string; password: string }) => {
 export const getUsers = async () => {
   try {
     const users = await User.findAll({
-      include: [Url],
+      include: [Gig],
     });
     return { status: "success", data: users };
   } catch (error) {

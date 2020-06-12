@@ -14,12 +14,12 @@ const validates_1 = require("../utils/validates");
 const { Op } = require("sequelize");
 const models = require("../../database/models/");
 const { Gig } = models;
-exports.createGig = (gig) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createGig = (gig, id) => __awaiter(void 0, void 0, void 0, function* () {
     const data = validates_1.validate(gig);
     if (data.errors) {
         return { status: "error", error: data.errors };
     }
-    const gigDetail = yield Gig.create(gig);
+    const gigDetail = yield Gig.create(Object.assign(Object.assign({}, gig), { user: id }));
     return { status: "success", data: gigDetail };
 });
 exports.getAllGigs = (query) => __awaiter(void 0, void 0, void 0, function* () {

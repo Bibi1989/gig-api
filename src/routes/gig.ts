@@ -90,8 +90,10 @@ router.route("/:id").get(async (req, res) => {
   res.json(gig);
 });
 
-router.route("/").post(async (req, res) => {
-  const gig = await createGig(req.body);
+router.post("/", authenticate, async (req: any, res) => {
+  const { id } = req.user;
+  console.log({ id });
+  const gig = await createGig(req.body, Number(id));
   if (gig.error) {
     res.status(404).json({ error: gig.error });
     return;
@@ -99,7 +101,7 @@ router.route("/").post(async (req, res) => {
   res.json(gig);
 });
 
-router.route("/:updateId").patch(async (req, res) => {
+router.route("/:updateId").patch(authenticate, async (req, res) => {
   const { updateId } = req.params;
   const gig = await updateGig(Number(updateId), req.body);
   if (gig.error) {
@@ -109,7 +111,7 @@ router.route("/:updateId").patch(async (req, res) => {
   res.json(gig);
 });
 
-router.route("/:deleteId").delete(async (req, res) => {
+router.route("/:deleteId").delete(authenticate, async (req, res) => {
   const { deleteId } = req.params;
   const gig = await deleteGig(Number(deleteId));
   if (gig.error) {

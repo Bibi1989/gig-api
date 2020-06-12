@@ -15,15 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const bcrypt_1 = require("bcrypt");
+const validates_1 = require("../utils/validates");
 const models = require("../../database/models/");
-const { User, Url } = models;
+const { User, Gig } = models;
 exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!user.username)
-        return { status: "error", error: "User field is empty" };
-    if (!user.email)
-        return { status: "error", error: "Email field is empty" };
-    if (!user.password)
-        return { status: "error", error: "Password field is empty" };
+    const data = validates_1.validateUser(user);
+    if (data.errors)
+        return { status: "error", error: data.errors };
     const findUser = yield User.findOne({
         where: {
             email: user.email,
@@ -57,7 +55,7 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
         if (!password)
             return { status: "error", error: "Password field is empty" };
         let user = yield User.findOne({ where: { email } });
-        if (!user.dataValues.email)
+        if (!user)
             return { status: "error", error: `User with ${email} does not exist` };
         const validPassword = yield bcryptjs_1.default.compare(password, user.dataValues.password);
         if (!validPassword)
@@ -76,7 +74,7 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield User.findAll({
-            include: [Url],
+            include: [Gig],
         });
         return { status: "success", data: users };
     }
