@@ -38,7 +38,7 @@ export const getAllGigs = async (query: {
 
 export const getGig = async (id: number) => {
   try {
-    const gig = await Gig.findOne({ where: { user: id } });
+    const gig = await Gig.findAll({ where: { user: id } });
     if (!gig) return { status: "error", error: "Gig not found!!!" };
     return { status: "success", data: gig };
   } catch (error) {
