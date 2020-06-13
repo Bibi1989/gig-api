@@ -12,6 +12,7 @@ router.post("/register", async (req, res) => {
   const user = await createUsers(body);
   if (user.status === "error") {
     res.status(400).json(user);
+    return;
   }
   res.header("auth", user.token);
   res.json(user);
@@ -21,6 +22,11 @@ router.post("/login", async (req, res) => {
   const user = await loginUser(body);
   if (user.status === "error") {
     res.status(400).json(user);
+    return;
+  }
+  if (user.status === "invalid") {
+    res.status(404).json(user);
+    return;
   }
   res.header("auth", user.token);
   res.json(user);

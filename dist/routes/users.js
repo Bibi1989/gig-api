@@ -17,6 +17,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
     const user = yield user_controller_1.createUsers(body);
     if (user.status === "error") {
         res.status(400).json(user);
+        return;
     }
     res.header("auth", user.token);
     res.json(user);
@@ -26,6 +27,11 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const user = yield user_controller_1.loginUser(body);
     if (user.status === "error") {
         res.status(400).json(user);
+        return;
+    }
+    if (user.status === "invalid") {
+        res.status(404).json(user);
+        return;
     }
     res.header("auth", user.token);
     res.json(user);
