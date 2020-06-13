@@ -24,6 +24,7 @@ exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
             last_name: "",
             email: "",
             password: "",
+            invalid: "",
         };
         const { first_name, last_name, email, password } = user;
         if (!first_name)
@@ -34,19 +35,19 @@ exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
             errors.email = "Email field is empty";
         if (!password)
             errors.password = "Password field is empty";
-        if (errors.first_name ||
-            errors.last_name ||
-            errors.email ||
-            errors.password)
-            return { status: "error", error: errors };
         const findUser = yield User.findOne({
             where: {
                 email: user.email,
             },
         });
-        if (findUser) {
-            return { status: "error", error: "User with this email exist" };
-        }
+        if (findUser)
+            errors.invalid = `User with this ${email} exist`;
+        if (errors.first_name ||
+            errors.last_name ||
+            errors.email ||
+            errors.password ||
+            errors.invalid)
+            return { status: "error", error: errors };
         const salt = yield bcrypt_1.genSalt(10);
         const hashedPassword = yield bcryptjs_1.default.hash(user.password, salt);
         const users = yield User.create(Object.assign(Object.assign({}, user), { password: hashedPassword }));
@@ -67,17 +68,18 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
         const errors = {
             email: "",
             password: "",
+            invalid: "",
         };
         const { email, password } = body;
         if (!email)
             errors.email = "Email field is empty";
         if (!password)
             errors.password = "Password field is empty";
-        if (errors.email || errors.password)
-            return { status: "error", error: errors };
         let user = yield User.findOne({ where: { email } });
         if (!user)
-            return { status: "error", error: `User with ${email} does not exist` };
+            errors.invalid = `User with ${email} does not exist`;
+        if (errors.email || errors.password || errors.invalid)
+            return { status: "error", error: errors };
         const validPassword = yield bcryptjs_1.default.compare(password, user.dataValues.password);
         if (!validPassword)
             return { status: "error", error: "Password is not valid!!!" };

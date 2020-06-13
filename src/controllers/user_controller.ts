@@ -10,6 +10,7 @@ interface userInterface {
   last_name: string;
   email: string;
   password: string;
+  invalid?: string;
 }
 
 export const createUsers = async (user: userInterface) => {
@@ -19,6 +20,7 @@ export const createUsers = async (user: userInterface) => {
       last_name: "",
       email: "",
       password: "",
+      invalid: "",
     };
     const { first_name, last_name, email, password } = user;
     if (!first_name) errors.first_name = "First Name field is empty";
@@ -26,22 +28,21 @@ export const createUsers = async (user: userInterface) => {
     if (!email) errors.email = "Email field is empty";
     if (!password) errors.password = "Password field is empty";
 
-    if (
-      errors.first_name ||
-      errors.last_name ||
-      errors.email ||
-      errors.password
-    )
-      return { status: "error", error: errors };
-
     const findUser = await User.findOne({
       where: {
         email: user.email,
       },
     });
-    if (findUser) {
-      return { status: "error", error: "User with this email exist" };
-    }
+    if (findUser) errors.invalid = `User with this ${email} exist`;
+
+    if (
+      errors.first_name ||
+      errors.last_name ||
+      errors.email ||
+      errors.password ||
+      errors.invalid
+    )
+      return { status: "error", error: errors };
     const salt = await genSalt(10);
     const hashedPassword = await bcrypt.hash(user.password, salt);
     const users = await User.create({
@@ -68,18 +69,18 @@ export const loginUser = async (body: { email: string; password: string }) => {
     const errors = {
       email: "",
       password: "",
+      invalid: "",
     };
     const { email, password } = body;
     if (!email) errors.email = "Email field is empty";
     if (!password) errors.password = "Password field is empty";
 
-    if (errors.email || errors.password)
-      return { status: "error", error: errors };
-
     let user = await User.findOne({ where: { email } });
 
-    if (!user)
-      return { status: "error", error: `User with ${email} does not exist` };
+    if (!user) errors.invalid = `User with ${email} does not exist`;
+
+    if (errors.email || errors.password || errors.invalid)
+      return { status: "error", error: errors };
 
     const validPassword = await bcrypt.compare(
       password,
