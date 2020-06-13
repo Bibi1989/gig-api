@@ -82,7 +82,7 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
             return { status: "error", error: errors };
         const validPassword = yield bcryptjs_1.default.compare(password, user.dataValues.password);
         if (!validPassword)
-            return { status: "error", error: "Password is not valid!!!" };
+            return { status: "invalid", error: "Password is not valid!!!" };
         const token = jsonwebtoken_1.default.sign({
             id: user.id,
             email: user.email,

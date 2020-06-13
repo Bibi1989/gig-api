@@ -88,7 +88,7 @@ export const loginUser = async (body: { email: string; password: string }) => {
     );
 
     if (!validPassword)
-      return { status: "error", error: "Password is not valid!!!" };
+      return { status: "invalid", error: "Password is not valid!!!" };
 
     const token = jwt.sign(
       {
