@@ -85,16 +85,16 @@ export const loginUser = async (body: { email: string; password: string }) => {
       user.dataValues.password
     );
 
-    if (!validPassword)
-      return (errors.invalidPassword = "Password is not valid!!!");
+    if (!validPassword) errors.invalidPassword = "Password is not valid!!!";
 
     if (
       errors.email ||
       errors.password ||
       errors.invalid ||
       errors.invalidPassword
-    )
+    ) {
       return { status: "error", error: errors };
+    }
 
     const token = jwt.sign(
       {

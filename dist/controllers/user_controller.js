@@ -81,12 +81,13 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
             errors.invalid = `User with ${email} does not exist`;
         const validPassword = yield bcryptjs_1.default.compare(password, user.dataValues.password);
         if (!validPassword)
-            return (errors.invalidPassword = "Password is not valid!!!");
+            errors.invalidPassword = "Password is not valid!!!";
         if (errors.email ||
             errors.password ||
             errors.invalid ||
-            errors.invalidPassword)
+            errors.invalidPassword) {
             return { status: "error", error: errors };
+        }
         const token = jsonwebtoken_1.default.sign({
             id: user.id,
             email: user.email,
