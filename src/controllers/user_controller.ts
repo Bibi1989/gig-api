@@ -65,13 +65,12 @@ export const createUsers = async (user: userInterface) => {
 };
 
 export const loginUser = async (body: { email: string; password: string }) => {
-  const errors = {
-    email: "",
-    password: "",
-    invalid: "",
-    invalidPassword: "",
-  };
   try {
+    const errors = {
+      email: "",
+      password: "",
+      invalid: "",
+    };
     const { email, password } = body;
     if (!email) errors.email = "Email field is empty";
     if (!password) errors.password = "Password field is empty";
@@ -80,21 +79,16 @@ export const loginUser = async (body: { email: string; password: string }) => {
 
     if (!user) errors.invalid = `User with ${email} does not exist`;
 
+    if (errors.email || errors.password || errors.invalid)
+      return { status: "error", error: errors };
+
     const validPassword = await bcrypt.compare(
       password,
       user.dataValues.password
     );
 
-    if (!validPassword) errors.invalidPassword = "Password is not valid!!!";
-
-    if (
-      errors.email ||
-      errors.password ||
-      errors.invalid ||
-      errors.invalidPassword
-    ) {
-      return { status: "error", error: errors };
-    }
+    if (!validPassword)
+      return { status: "error", error: "Password is not valid!!!" };
 
     const token = jwt.sign(
       {

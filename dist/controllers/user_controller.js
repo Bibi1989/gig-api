@@ -64,13 +64,12 @@ exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = {
-        email: "",
-        password: "",
-        invalid: "",
-        invalidPassword: "",
-    };
     try {
+        const errors = {
+            email: "",
+            password: "",
+            invalid: "",
+        };
         const { email, password } = body;
         if (!email)
             errors.email = "Email field is empty";
@@ -79,15 +78,11 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
         let user = yield User.findOne({ where: { email } });
         if (!user)
             errors.invalid = `User with ${email} does not exist`;
+        if (errors.email || errors.password || errors.invalid)
+            return { status: "error", error: errors };
         const validPassword = yield bcryptjs_1.default.compare(password, user.dataValues.password);
         if (!validPassword)
-            errors.invalidPassword = "Password is not valid!!!";
-        if (errors.email ||
-            errors.password ||
-            errors.invalid ||
-            errors.invalidPassword) {
-            return { status: "error", error: errors };
-        }
+            return { status: "error", error: "Password is not valid!!!" };
         const token = jsonwebtoken_1.default.sign({
             id: user.id,
             email: user.email,
