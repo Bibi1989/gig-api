@@ -61,11 +61,17 @@ exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const errors = {
+            email: "",
+            password: "",
+        };
         const { email, password } = body;
         if (!email)
-            return { status: "error", error: "Email field is empty" };
+            errors.email = "Email field is empty";
         if (!password)
-            return { status: "error", error: "Password field is empty" };
+            errors.password = "Password field is empty";
+        if (errors)
+            return { status: "error", error: errors };
         let user = yield User.findOne({ where: { email } });
         if (!user)
             return { status: "error", error: `User with ${email} does not exist` };

@@ -59,9 +59,15 @@ export const createUsers = async (user: userInterface) => {
 
 export const loginUser = async (body: { email: string; password: string }) => {
   try {
+    const errors = {
+      email: "",
+      password: "",
+    };
     const { email, password } = body;
-    if (!email) return { status: "error", error: "Email field is empty" };
-    if (!password) return { status: "error", error: "Password field is empty" };
+    if (!email) errors.email = "Email field is empty";
+    if (!password) errors.password = "Password field is empty";
+
+    if (errors) return { status: "error", error: errors };
 
     let user = await User.findOne({ where: { email } });
 
