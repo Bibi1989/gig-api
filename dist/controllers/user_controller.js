@@ -34,7 +34,10 @@ exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
             errors.email = "Email field is empty";
         if (!password)
             errors.password = "Password field is empty";
-        if (errors)
+        if (errors.first_name ||
+            errors.last_name ||
+            errors.email ||
+            errors.password)
             return { status: "error", error: errors };
         const findUser = yield User.findOne({
             where: {
@@ -70,7 +73,7 @@ exports.loginUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
             errors.email = "Email field is empty";
         if (!password)
             errors.password = "Password field is empty";
-        if (errors)
+        if (errors.email || errors.password)
             return { status: "error", error: errors };
         let user = yield User.findOne({ where: { email } });
         if (!user)
