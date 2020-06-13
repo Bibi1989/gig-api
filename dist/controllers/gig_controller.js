@@ -11,9 +11,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const capitalize_1 = require("../utils/capitalize");
 const validates_1 = require("../utils/validates");
+const cloudinary_1 = require("cloudinary");
 const { Op } = require("sequelize");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const multer = require("multer");
+const cloudinary = cloudinary_1.v2;
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+});
 const models = require("../../database/models/");
 const { Gig } = models;
+exports.uploadImage = (image) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield cloudinary.uploader.upload(image);
+        console.log(response);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+});
 exports.createGig = (gig, id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = validates_1.validate(gig);

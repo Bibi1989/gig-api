@@ -1,11 +1,31 @@
 import { capitalizeString } from "../utils/capitalize";
 import { GInterface } from "../utils/interfaces";
 import { validate } from "../utils/validates";
+import { v2 } from "cloudinary";
 const { Op } = require("sequelize");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const multer = require("multer");
+
+const cloudinary = v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 const models = require("../../database/models/");
 
 const { Gig } = models;
+
+export const uploadImage = async (image: any) => {
+  try {
+    const response = await cloudinary.uploader.upload(image);
+    console.log(response);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 export const createGig = async (gig: GInterface, id: number) => {
   try {

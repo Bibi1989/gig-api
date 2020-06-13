@@ -10,9 +10,28 @@ import {
   queryGigBaseOnTechnology,
   baseOnLocationProficiencyTech,
   deleteGig,
+  uploadImage,
 } from "../controllers/gig_controller";
+import { v2 } from "cloudinary";
+const multer = require("multer");
+import cloudinaryStorage from "multer-storage-cloudinary";
+
+const models = require("../../database/models/");
 
 const router = Router();
+
+v2.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+
+const storage = cloudinaryStorage({
+  cloudinary: v2,
+  folder: "demo",
+  transformation: [{ width: 500, height: 500, crop: "limit" }],
+} as any);
+const parser = multer({ storage: storage });
 
 router.route("/").get(async (req, res) => {
   let limit = req.query.limit ? Number(req.query.limit) : 10;
@@ -100,6 +119,24 @@ router.post("/", authenticate, async (req: any, res) => {
     return;
   }
   res.json(gig);
+});
+router.patch("/upload/:id", parser.single("image"), (req: any, res) => {
+  // const images = await uploadImage(req.body.image);
+  console.log(req.file); // to see what is returned to you
+  const image = {
+    url: "",
+    id: "",
+  };
+  image.url = req.file.url;
+  image.id = req.file.public_id;
+  console.log(image);
+  models.Gig.update(
+    { ...req.body.gig, ...image },
+    { where: { id: Number(req.params.id) } }
+  ) // save image information in database
+    .then((newImage: any) => res.json(newImage))
+    .catch((err: Error) => console.log(err));
+  // res.json({ data: images });
 });
 
 router.route("/:updateId").patch(authenticate, async (req, res) => {
