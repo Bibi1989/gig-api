@@ -18,17 +18,24 @@ const bcrypt_1 = require("bcrypt");
 const models = require("../../database/models/");
 const { User, Gig } = models;
 exports.createUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    //   console.log();
     try {
+        const errors = {
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: "",
+        };
         const { first_name, last_name, email, password } = user;
         if (!first_name)
-            return { status: "error", error: "User field is empty" };
+            errors.first_name = "First Name field is empty";
         if (!last_name)
-            return { status: "error", error: "User field is empty" };
+            errors.last_name = "Last Name field is empty";
         if (!email)
-            return { status: "error", error: "Email field is empty" };
+            errors.email = "Email field is empty";
         if (!password)
-            return { status: "error", error: "Password field is empty" };
+            errors.password = "Password field is empty";
+        if (errors)
+            return { status: "error", error: errors };
         const findUser = yield User.findOne({
             where: {
                 email: user.email,
