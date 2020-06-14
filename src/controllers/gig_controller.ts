@@ -34,13 +34,13 @@ export const createGig = async (gig: GInterface, id: number) => {
       return { status: "error", error: data.errors };
     }
 
-    // const find_gig = await Gig.findOne({ where: { id } });
+    const find_gig = await Gig.findOne({ where: { user: id } });
 
-    // if (find_gig.dataValues)
-    //   return {
-    //     status: "error",
-    //     error: "You can't add another edit your profile",
-    //   };
+    if (find_gig.dataValues)
+      return {
+        status: "error",
+        error: "You can't add another edit your profile",
+      };
 
     const gigDetail = await Gig.create({ ...gig, user: id });
 

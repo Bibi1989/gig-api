@@ -38,12 +38,12 @@ exports.createGig = (gig, id) => __awaiter(void 0, void 0, void 0, function* () 
         if (data.errors) {
             return { status: "error", error: data.errors };
         }
-        // const find_gig = await Gig.findOne({ where: { id } });
-        // if (find_gig.dataValues)
-        //   return {
-        //     status: "error",
-        //     error: "You can't add another edit your profile",
-        //   };
+        const find_gig = yield Gig.findOne({ where: { user: id } });
+        if (find_gig.dataValues)
+            return {
+                status: "error",
+                error: "You can't add another edit your profile",
+            };
         const gigDetail = yield Gig.create(Object.assign(Object.assign({}, gig), { user: id }));
         return { status: "success", data: gigDetail };
     }
