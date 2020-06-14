@@ -39,7 +39,8 @@ exports.createGig = (gig, id) => __awaiter(void 0, void 0, void 0, function* () 
             return { status: "error", error: data.errors };
         }
         const find_gig = yield Gig.findOne({ where: { user: id } });
-        if (find_gig.dataValues)
+        console.log({ find_gig });
+        if (find_gig)
             return {
                 status: "error",
                 error: "You can't add another edit your profile",
