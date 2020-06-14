@@ -36,7 +36,7 @@ export const createGig = async (gig: GInterface, id: number) => {
 
     const find_gig = await Gig.findOne({ where: { id } });
 
-    if (find_gig)
+    if (find_gig.dataValues)
       return {
         status: "error",
         error: "You can't add another edit your profile",
