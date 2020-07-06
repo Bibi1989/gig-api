@@ -33,6 +33,10 @@ module.exports = {
       linkedin_url: {
         type: Sequelize.STRING,
       },
+      portfolio_url: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       technologies: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },

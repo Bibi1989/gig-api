@@ -31,7 +31,7 @@ const storage = multer_storage_cloudinary_1.default({
     transformation: [{ width: 500, height: 500, crop: "limit" }],
 });
 const parser = multer({ storage: storage });
-router.route("/").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/").get((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let limit = req.query.limit ? Number(req.query.limit) : 10;
     let page = req.query.page ? Number(req.query.page) : 1;
     let offset = limit * (page - 1);
@@ -42,26 +42,23 @@ router.route("/").get((req, res) => __awaiter(void 0, void 0, void 0, function* 
     };
     const gigs = yield gig_controller_1.getAllGigs(queryObj);
     if (gigs.error) {
-        res.status(404).json({ error: gigs.error });
-        return;
+        return next(gigs);
     }
     res.json(gigs);
 }));
-router.route("/search").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/search").get((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const key = Object.keys(req.query)[0];
     if (key === "location") {
         const gig = yield gig_controller_1.queryGigBaseOnLocation(req.query.location);
         if (gig.error) {
-            res.status(404).json({ error: gig.error });
-            return;
+            return next(gig);
         }
         res.json(gig);
     }
     else if (key === "proficiency") {
         const gig = yield gig_controller_1.queryGigBaseOnProficiency(req.query.proficiency);
         if (gig.error) {
-            res.status(404).json({ error: gig.error });
-            return;
+            return next(gig);
         }
         res.json(gig);
     }
@@ -69,13 +66,12 @@ router.route("/search").get((req, res) => __awaiter(void 0, void 0, void 0, func
         console.log(req.query.tech);
         const gig = yield gig_controller_1.queryGigBaseOnTechnology(req.query.tech);
         if (gig.error) {
-            res.status(404).json({ error: gig.error });
-            return;
+            return next(gig);
         }
         res.json(gig);
     }
 }));
-router.route("/query").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/query").get((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let location = req.query.location;
     let proficiency = req.query.proficiency;
     let technology = req.query.tech;
@@ -86,27 +82,23 @@ router.route("/query").get((req, res) => __awaiter(void 0, void 0, void 0, funct
     };
     const gig = yield gig_controller_1.baseOnLocationProficiencyTech(search);
     if (gig.error) {
-        res.status(404).json({ error: gig.error });
-        return;
+        return next(gig);
     }
     res.json(gig);
 }));
-router.route("/profile").get(auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/profile").get(auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
     const gig = yield gig_controller_1.getGig(Number(id));
     if (gig.error) {
-        res.status(404).json({ error: gig.error });
-        return;
+        return next(gig.error);
     }
     res.json(gig);
 }));
-router.post("/", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
-    console.log({ id });
     const gig = yield gig_controller_1.createGig(req.body, Number(id));
     if (gig.error) {
-        res.status(404).json({ error: gig.error });
-        return;
+        return next(gig);
     }
     res.json(gig);
 }));
@@ -125,21 +117,19 @@ router.patch("/upload/:id", parser.single("image"), (req, res) => {
         .catch((err) => console.log(err));
     // res.json({ data: images });
 });
-router.route("/:updateId").patch(auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/:updateId").patch(auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { updateId } = req.params;
     const gig = yield gig_controller_1.updateGig(Number(updateId), req.body);
     if (gig.error) {
-        res.status(404).json({ error: gig.error });
-        return;
+        return next(gig);
     }
     res.json(gig);
 }));
-router.route("/:deleteId").delete(auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.route("/:deleteId").delete(auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { deleteId } = req.params;
     const gig = yield gig_controller_1.deleteGig(Number(deleteId));
     if (gig.error) {
-        res.status(404).json({ error: gig.error });
-        return;
+        return next(gig);
     }
     res.json(gig);
 }));

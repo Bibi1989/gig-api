@@ -6,6 +6,8 @@
     "watch-ts": "tsc -w",
     "watch-node": "nodemon ./bin/www",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"yarn run watch-ts\" \"yarn run watch-node\"",
+    "drop": "sequelize db:migrate:undo:all",
+    "up": "sequelize db:migrate",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && yarn migrate",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
@@ -18,7 +20,6 @@
     ]
   },
   "dependencies": {
-    "@databases/pg": "^2.0.0",
     "@hapi/joi": "^17.1.0",
     "@types/bcrypt": "^3.0.0",
     "@types/bcryptjs": "^2.4.2",
@@ -52,7 +53,6 @@
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "node-pg-migrate": "^4.2.2",
     "nodemon": "^2.0.2",
     "pg": "^8.2.0",
     "pg-hstore": "^2.3.3",

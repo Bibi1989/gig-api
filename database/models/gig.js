@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       phone: DataTypes.STRING,
       github_url: DataTypes.STRING,
       linkedin_url: DataTypes.STRING,
+      portfolio_url: DataTypes.STRING,
       technologies: DataTypes.ARRAY(DataTypes.STRING),
       proficiency: DataTypes.STRING,
       stack: DataTypes.STRING,
