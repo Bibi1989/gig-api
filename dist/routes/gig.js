@@ -72,7 +72,7 @@ router.route("/search").get((req, res, next) => __awaiter(void 0, void 0, void 0
     }
 }));
 router.route("/query").get((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let location = req.query.location;
+    let location = req.query.location.toLowerCase();
     let proficiency = req.query.proficiency;
     let technology = req.query.tech;
     const search = {
@@ -96,7 +96,8 @@ router.route("/profile").get(auth_1.default, (req, res, next) => __awaiter(void 
 }));
 router.post("/", auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
-    const gig = yield gig_controller_1.createGig(req.body, Number(id));
+    const body = Object.assign(Object.assign({}, req.body), { location: req.body.location.toLowerCase() });
+    const gig = yield gig_controller_1.createGig(body, Number(id));
     if (gig.error) {
         return next(gig);
     }

@@ -77,7 +77,7 @@ router.route("/search").get(async (req, res, next) => {
 });
 
 router.route("/query").get(async (req, res, next) => {
-  let location = req.query.location;
+  let location = req.query.location.toLowerCase();
   let proficiency = req.query.proficiency;
   let technology = req.query.tech;
 
@@ -106,7 +106,11 @@ router.route("/profile").get(authenticate, async (req: any, res, next) => {
 
 router.post("/", authenticate, async (req: any, res: any, next) => {
   const { id } = req.user;
-  const gig = await createGig(req.body, Number(id));
+  const body = {
+    ...req.body,
+    location: req.body.location.toLowerCase(),
+  };
+  const gig = await createGig(body, Number(id));
   if (gig.error) {
     return next(gig);
   }
