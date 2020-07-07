@@ -2,28 +2,45 @@ import { capitalizeString } from "../utils/capitalize";
 import { GInterface } from "../utils/interfaces";
 import { validate } from "../utils/validates";
 import { v2 } from "cloudinary";
+import { Request } from "express";
 const { Op } = require("sequelize");
 const cloudinaryStorage = require("multer-storage-cloudinary");
 const multer = require("multer");
 
-const cloudinary = v2;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const models = require("../../database/models/");
 
 const { Gig } = models;
 
-export const uploadImage = async (image: any) => {
+export const uploadImage = async (req: any, gigId: number) => {
   try {
-    const response = await cloudinary.uploader.upload(image);
-    console.log(response);
+    const findGig = await Gig.findOne({ where: { id: Number(gigId) } });
+
+    if (!findGig) {
+      return { status: "error", error: "Dev not found!!!" };
+    }
+    const img = await v2.uploader.upload(
+      req.files.file.tempFilePath,
+      { folder: "gig" },
+      (err: Error, result: any) => {
+        if (err) {
+          console.log(err);
+        }
+        return result;
+      }
+    );
+    const upload = await Gig.update(
+      { profile_image: img.secure_url },
+      { where: { id: Number(gigId) } }
+    );
+    return { status: "success", data: upload };
   } catch (error) {
-    console.log(error.message);
+    return { status: "error", error: error.message };
   }
 };
 
