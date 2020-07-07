@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import dotenv from "dotenv";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 import swaggerUi from "swagger-ui-express";
 const swaggerDoc = require("../swagger.json");
 
@@ -16,6 +17,7 @@ import gigRoute from "./routes/gig";
 import userRoute from "./routes/users";
 
 app.use(cors());
+app.use(fileUpload({ useTempFiles: true }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

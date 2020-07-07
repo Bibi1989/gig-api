@@ -15,22 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_1 = __importDefault(require("./auth"));
 const gig_controller_1 = require("../controllers/gig_controller");
-const cloudinary_1 = require("cloudinary");
-const multer = require("multer");
-const multer_storage_cloudinary_1 = __importDefault(require("multer-storage-cloudinary"));
-const models = require("../../database/models/");
 const router = express_1.Router();
-cloudinary_1.v2.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-});
-const storage = multer_storage_cloudinary_1.default({
-    cloudinary: cloudinary_1.v2,
-    folder: "demo",
-    transformation: [{ width: 500, height: 500, crop: "limit" }],
-});
-const parser = multer({ storage: storage });
 router.route("/").get((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let limit = req.query.limit ? Number(req.query.limit) : 10;
     let page = req.query.page ? Number(req.query.page) : 1;
@@ -72,7 +57,7 @@ router.route("/search").get((req, res, next) => __awaiter(void 0, void 0, void 0
     }
 }));
 router.route("/query").get((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let location = req.query.location;
+    let location = req.query.location.toLowerCase();
     let proficiency = req.query.proficiency;
     let technology = req.query.tech;
     const search = {
@@ -96,27 +81,38 @@ router.route("/profile").get(auth_1.default, (req, res, next) => __awaiter(void 
 }));
 router.post("/", auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
-    const gig = yield gig_controller_1.createGig(req.body, Number(id));
+    const body = Object.assign(Object.assign({}, req.body), { location: req.body.location.toLowerCase() });
+    const gig = yield gig_controller_1.createGig(body, Number(id));
     if (gig.error) {
         return next(gig);
     }
     res.json(gig);
 }));
-router.patch("/upload/:id", parser.single("image"), (req, res) => {
-    // const images = await uploadImage(req.body.image);
-    console.log(req.file); // to see what is returned to you
-    const image = {
-        url: "",
-        id: "",
-    };
-    image.url = req.file.url;
-    image.id = req.file.public_id;
-    console.log(image);
-    models.Gig.update(Object.assign(Object.assign({}, req.body.gig), image), { where: { id: Number(req.params.id) } }) // save image information in database
-        .then((newImage) => res.json(newImage))
-        .catch((err) => console.log(err));
-    // res.json({ data: images });
-});
+router.patch("/upload/:id", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield gig_controller_1.uploadImage(req, req.params.id);
+    if (response.status === "error") {
+        res.status(404).json({ error: response.error });
+    }
+    res.json(response);
+}));
+// router.patch("/upload/:id", (req: any, res) => {
+//   // const images = await uploadImage(req.body.image);
+//   console.log(req.file); // to see what is returned to you
+//   const image = {
+//     url: "",
+//     id: "",
+//   };
+//   image.url = req.file.url;
+//   image.id = req.file.public_id;
+//   console.log(image);
+//   models.Gig.update(
+//     { ...req.body.gig, ...image },
+//     { where: { id: Number(req.params.id) } }
+//   ) // save image information in database
+//     .then((newImage: any) => res.json(newImage))
+//     .catch((err: Error) => console.log(err));
+//   // res.json({ data: images });
+// });
 router.route("/:updateId").patch(auth_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { updateId } = req.params;
     const gig = yield gig_controller_1.updateGig(Number(updateId), req.body);
